@@ -1,111 +1,273 @@
 import {
     auth,
+    db,
     signInWithEmailAndPassword,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    doc,
+    getDoc
 } from "./firebase.js";
 
-const loginForm = document.getElementById("loginForm");
-const errorMessage = document.getElementById("errorMessage");
-const forgotPassword = document.getElementById("forgotPassword");
+
+// ===============================
+// ELEMENTS
+// ===============================
+const loginForm =
+    document.getElementById("loginForm");
+
+const playerCodeInput =
+    document.getElementById("playerCode");
+
+const passwordInput =
+    document.getElementById("loginPassword");
+
+const errorMessage =
+    document.getElementById("errorMessage");
 
 
 // ===============================
 // LOGIN
 // ===============================
+loginForm.addEventListener("submit", async (e) => {
 
-loginForm.addEventListener("submit", async function(event) {
+    e.preventDefault();
 
-    event.preventDefault();
 
-    const email =
-        document.getElementById("loginEmail").value.trim();
+    const playerCode =
+        playerCodeInput.value
+            .trim()
+            .toUpperCase();
 
     const password =
-        document.getElementById("loginPassword").value;
+        passwordInput.value;
 
+
+    // Clear error
     errorMessage.textContent = "";
+
+
+    if (!playerCode || !password) {
+
+        errorMessage.textContent =
+            "Enter your Player Code and password.";
+
+        return;
+    }
+
 
     try {
 
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
+        // ===============================
+        // FIND PLAYER CODE
+        // ===============================
+        const codeRef =
+            doc(db, "playerCodes", playerCode);
+
+        const codeSnap =
+            await getDoc(codeRef);
+
+
+        if (!codeSnap.exists()) {
+
+            errorMessage.textContent =
+                "Player Code not found.";
+
+            return;
+        }
+
+
+        // Get player's email
+        const playerData =
+            codeSnap.data();
+
+        const email =
+            playerData.email;
+
+
+        // ===============================
+        // FIREBASE LOGIN
+        // ===============================
+        const userCredential =
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+        const user =
+            userCredential.user;
+
+
+        // ===============================
+        // GET PLAYER PROFILE
+        // ===============================
+        const playerRef =
+            doc(db, "players", user.uid);
+
+        const playerSnap =
+            await getDoc(playerRef);
+
+
+        if (!playerSnap.exists()) {
+
+            errorMessage.textContent =
+                "Player profile was not found.";
+
+            return;
+        }
+
+
+        const player =
+            playerSnap.data();
+
+
+        // ===============================
+        // SAVE LOGIN DATA
+        // ===============================
+        localStorage.setItem(
+            "playerUid",
+            user.uid
         );
 
-        // Login successful
-        window.location.href = "dashboard.html";
+        localStorage.setItem(
+            "playerCode",
+            player.playerCode
+        );
+
+        localStorage.setItem(
+            "playerAccount",
+            JSON.stringify(player)
+        );
+
+
+        // ===============================
+        // OPEN DASHBOARD
+        // ===============================
+        window.location.replace(
+            "dashboard.html"
+        );
+
 
     } catch (error) {
 
-        console.log(error);
+        console.error("Login error:", error);
 
-        if (error.code === "auth/invalid-credential") {
+
+        if (
+            error.code ===
+            "auth/invalid-credential"
+        ) {
 
             errorMessage.textContent =
-                "Incorrect email or password.";
+                "Incorrect Player Code or password.";
 
-        } else if (error.code === "auth/too-many-requests") {
+        } else if (
+            error.code ===
+            "auth/wrong-password"
+        ) {
 
             errorMessage.textContent =
-                "Too many attempts. Please wait and try again later.";
+                "Incorrect password.";
+
+        } else if (
+            error.code ===
+            "auth/too-many-requests"
+        ) {
+
+            errorMessage.textContent =
+                "Too many attempts. Please wait and try again.";
+
+        } else if (
+            error.code ===
+            "permission-denied"
+        ) {
+
+            errorMessage.textContent =
+                "Firebase permission denied. Check your Firestore rules.";
 
         } else {
 
             errorMessage.textContent =
-                "Login failed. Please check your details.";
+                error.message;
         }
+
     }
+
 });
 
 
 // ===============================
 // FORGOT PASSWORD
 // ===============================
+const forgotPassword =
+    document.getElementById("forgotPassword");
 
-forgotPassword.addEventListener("click", async function(event) {
 
-    event.preventDefault();
+forgotPassword.addEventListener("click", async (e) => {
 
-    const email =
-        document.getElementById("loginEmail").value.trim();
+    e.preventDefault();
 
-    if (!email) {
+
+    const playerCode =
+        playerCodeInput.value
+            .trim()
+            .toUpperCase();
+
+
+    if (!playerCode) {
 
         errorMessage.textContent =
-            "Please enter your email address first.";
+            "Enter your Player Code first.";
 
         return;
     }
 
+
     try {
 
+        // Find player code
+        const codeRef =
+            doc(db, "playerCodes", playerCode);
+
+        const codeSnap =
+            await getDoc(codeRef);
+
+
+        if (!codeSnap.exists()) {
+
+            errorMessage.textContent =
+                "Player Code not found.";
+
+            return;
+        }
+
+
+        const playerData =
+            codeSnap.data();
+
+
+        // Send password reset email
         await sendPasswordResetEmail(
             auth,
-            email
+            playerData.email
         );
 
-        errorMessage.textContent =
-            "Password reset email sent. Check your inbox.";
+
+        alert(
+            "Password reset instructions have been sent to the email address used when you registered."
+        );
+
 
     } catch (error) {
 
-        console.log(error);
+        console.error(
+            "Password reset error:",
+            error
+        );
 
-        if (error.code === "auth/user-not-found") {
 
-            errorMessage.textContent =
-                "No account was found with this email.";
+        errorMessage.textContent =
+            error.message;
 
-        } else if (error.code === "auth/invalid-email") {
-
-            errorMessage.textContent =
-                "Please enter a valid email address.";
-
-        } else {
-
-            errorMessage.textContent =
-                "Unable to send reset email. Please try again.";
-        }
     }
+
 });
