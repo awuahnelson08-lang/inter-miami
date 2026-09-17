@@ -1,18 +1,25 @@
-// Firebase App
+// ===============================
+// FIREBASE APP
+// ===============================
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 
-// Firebase Authentication
+// ===============================
+// FIREBASE AUTHENTICATION
+// ===============================
 import {
     getAuth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     onAuthStateChanged,
-    signOut
+    signOut,
+    sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// Firebase Firestore
+// ===============================
+// FIRESTORE
+// ===============================
 import {
     getFirestore,
     doc,
@@ -20,8 +27,9 @@ import {
     setDoc
 } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
 
-
-// Your Firebase configuration
+// ===============================
+// FIREBASE CONFIG
+// ===============================
 const firebaseConfig = {
     apiKey: "AIzaSyCsIurfaX-DrD8syWlGvhRh3jnJXBe2NoA",
     authDomain: "nelson-df8bb.firebaseapp.com",
@@ -32,21 +40,16 @@ const firebaseConfig = {
     measurementId: "G-PC67DR4D1G"
 };
 
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-
-// Initialize Authentication
+// Firebase services
 const auth = getAuth(app);
-
-
-// Initialize Firestore
 const db = getFirestore(app);
 
-
-// Export everything needed by our website
+// Export everything needed
 export {
+    app,
     auth,
     db,
 
@@ -55,6 +58,7 @@ export {
     createUserWithEmailAndPassword,
     onAuthStateChanged,
     signOut,
+    sendPasswordResetEmail,
 
     // Firestore
     doc,
