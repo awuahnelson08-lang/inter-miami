@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Player Login - Inter Miami Boys</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <!-- Team Logo -->
+        <div class="team-logo">
+            IMB
+        </div>
+
+        <h1>Inter Miami Boys</h1>
+
+        <p class="welcome">
+            Player Portal
+        </p>
+
+        <!-- Login Card -->
+        <div class="auth-card">
+
+            <h2>Player Login</h2>
+
+            <p class="subtitle">
+                Enter your email and password
+            </p>
+
+            <form id="loginForm">
+
+                <!-- Email -->
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Email address"
+                    required
+                >
+
+                <!-- Password -->
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Password"
+                    required
+                >
+
+                <!-- Login Button -->
+                <button
+                    type="submit"
+                    class="btn login-btn">
+                    🔐 Log In
+                </button>
+
+            </form>
+
+            <!-- Error Message -->
+            <p id="errorMessage" class="error-message"></p>
+
+            <!-- Sign Up -->
+            <p class="already">
+
+                Don't have an account?
+
+                <a href="register.html">
+                    Sign Up
+                </a>
+
+            </p>
+
+        </div>
+
+        <p class="footer">
+            © 2026 Inter Miami Boys
+        </p>
+
+    </main>
+
+    <!-- Firebase Login Script -->
+    <script type="module" src="login.js"></script>
+
+</body>
+
+</html>
