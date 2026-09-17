@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard - Inter Miami Boys</title>
+
+<link rel="stylesheet" href="style.css?v=9">
+
+<style>
+.admin-dashboard {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.admin-card {
+    background: #111116;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-buttons {
+    display: grid;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.admin-button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: #f5b5d2;
+    color: #111116;
+}
+
+.admin-button:hover {
+    opacity: 0.85;
+}
+
+.logout-button {
+    background: transparent;
+    color: #f5b5d2;
+    border: 2px solid #f5b5d2;
+}
+
+#adminMessage {
+    text-align: center;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<main class="admin-dashboard">
+
+<header class="admin-header">
+
+<div class="team-logo">IMB</div>
+
+<h1>Inter Miami Boys</h1>
+
+<p>Admin Control Panel</p>
+
+</header>
+
+
+<section class="admin-card">
+
+<h2>Welcome, Administrator 👋</h2>
+
+<p>
+You have access to the Inter Miami Boys management system.
+</p>
+
+</section>
+
+
+<section class="admin-card">
+
+<h2>Admin Menu</h2>
+
+<div class="admin-buttons">
+
+<!-- PLAYERS -->
+<a href="players.html" class="admin-button">
+👥 View All Players
+</a>
+
+
+<!-- MESSAGES -->
+<a href="messages.html" class="admin-button">
+📢 Send Information
+</a>
+
+
+<!-- ANNOUNCEMENTS -->
+<a href="announcements.html" class="admin-button">
+📣 Announcements
+</a>
+
+
+<!-- LOGOUT -->
+<button type="button" id="logoutButton"
+class="admin-button logout-button">
+🚪 Logout
+</button>
+
+</div>
+
+<p id="adminMessage"></p>
+
+</section>
+
+</main>
+
+
+<script type="module">
+
+import {
+    auth,
+    db,
+    onAuthStateChanged,
+    signOut,
+    doc,
+    getDoc
+} from "./firebase.js";
+
+
+const adminMessage =
+    document.getElementById("adminMessage");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+
+/* CHECK ADMIN */
+
+onAuthStateChanged(auth, async function(user) {
+
+    if (!user) {
+
+        window.location.href =
+            "admin-login.html";
+
+        return;
+    }
+
+
+    try {
+
+        const adminRef =
+            doc(db, "admins", user.uid);
+
+        const adminSnap =
+            await getDoc(adminRef);
+
+
+        if (!adminSnap.exists()) {
+
+            await signOut(auth);
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+        }
+
+
+        const adminData =
+            adminSnap.data();
+
+
+        if (adminData.role !== "admin") {
+
+            await signOut(auth);
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+        }
+
+
+        adminMessage.textContent =
+            "Admin access verified ✓";
+
+        adminMessage.style.color =
+            "green";
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        adminMessage.textContent =
+            "Error: " + error.message;
+
+        adminMessage.style.color =
+            "red";
+    }
+
+});
+
+
+/* LOGOUT */
+
+logoutButton.addEventListener(
+    "click",
+    async function() {
+
+        try {
+
+            await signOut(auth);
+
+            localStorage.removeItem("adminUid");
+            localStorage.removeItem("adminEmail");
+            localStorage.removeItem("adminRole");
+
+            window.location.href =
+                "admin-login.html";
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Logout error:",
+                error
+            );
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
