@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Player Dashboard - Inter Miami Boys</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+
+        <div class="dashboard-logo">
+            IMB
+        </div>
+
+        <div>
+            <h2>Inter Miami Boys</h2>
+            <p>Player Portal</p>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+            Logout
+        </button>
+
+    </header>
+
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-container">
+
+
+        <!-- Welcome -->
+        <section class="welcome-card">
+
+            <p class="section-label">
+                PLAYER DASHBOARD
+            </p>
+
+            <h1>
+                Welcome, <span id="playerName">Player</span> 👋
+            </h1>
+
+            <p>
+                Here you can view your team information,
+                statistics and upcoming matches.
+            </p>
+
+        </section>
+
+
+        <!-- Player Profile -->
+        <section class="profile-card">
+
+            <div class="profile-icon">
+                👤
+            </div>
+
+            <div class="profile-info">
+
+                <h2 id="profileName">
+                    Player Name
+                </h2>
+
+                <p>
+                    <strong>Player Code:</strong>
+                    <span id="profileCode">---</span>
+                </p>
+
+                <p>
+                    <strong>Jersey Number:</strong>
+                    <span id="profileJersey">---</span>
+                </p>
+
+                <p>
+                    <strong>Position:</strong>
+                    <span id="profilePosition">---</span>
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="dashboard-section">
+
+            <p class="section-label">
+                YOUR PERFORMANCE
+            </p>
+
+            <h2>My Statistics</h2>
+
+            <div class="stat-grid">
+
+                <div class="dashboard-stat">
+                    <span>⚽</span>
+                    <h3>0</h3>
+                    <p>Goals</p>
+                </div>
+
+                <div class="dashboard-stat">
+                    <span>🎯</span>
+                    <h3>0</h3>
+                    <p>Assists</p>
+                </div>
+
+                <div class="dashboard-stat">
+                    <span>🏟️</span>
+                    <h3>0</h3>
+                    <p>Matches</p>
+                </div>
+
+                <div class="dashboard-stat">
+                    <span>🟨</span>
+                    <h3>0</h3>
+                    <p>Yellow Cards</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Upcoming Match -->
+        <section class="dashboard-section">
+
+            <p class="section-label">
+                TEAM
+            </p>
+
+            <h2>Next Match</h2>
+
+            <div class="next-match">
+
+                <div class="match-team">
+                    <div class="match-logo">
+                        IMB
+                    </div>
+
+                    <h3>Inter Miami Boys</h3>
+                </div>
+
+
+                <div class="vs">
+
+                    <small>UPCOMING</small>
+
+                    <strong>VS</strong>
+
+                    <p>
+                        Date TBA
+                    </p>
+
+                </div>
+
+
+                <div class="match-team">
+
+                    <div class="opponent">
+                        ?
+                    </div>
+
+                    <h3>Opponent</h3>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Announcements -->
+        <section class="dashboard-section">
+
+            <p class="section-label">
+                TEAM NEWS
+            </p>
+
+            <h2>Announcements</h2>
+
+            <div class="announcement">
+
+                <div class="announcement-icon">
+                    📢
+                </div>
+
+                <div>
+                    <h3>Welcome to Inter Miami Boys</h3>
+
+                    <p>
+                        Your player dashboard is ready.
+                        Team announcements will appear here.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+
+        <p>
+            © 2026 Inter Miami Boys
+        </p>
+
+        <p>
+            One Team. One Dream. One Family.
+        </p>
+
+    </footer>
+
+
+<script>
+
+    // Get saved player
+    const savedPlayer =
+        localStorage.getItem("playerAccount");
+
+
+    // Check login
+    const loggedIn =
+        localStorage.getItem("loggedIn");
+
+
+    if (!savedPlayer || loggedIn !== "true") {
+
+        // Send user back to login
+        window.location.href = "login.html";
+
+    } else {
+
+        const player =
+            JSON.parse(savedPlayer);
+
+
+        // Display player information
+
+        document.getElementById("playerName")
+            .textContent = player.fullName;
+
+
+        document.getElementById("profileName")
+            .textContent = player.fullName;
+
+
+        document.getElementById("profileCode")
+            .textContent = player.playerCode;
+
+
+        document.getElementById("profileJersey")
+            .textContent = player.jerseyNumber;
+
+
+        document.getElementById("profilePosition")
+            .textContent = player.position;
+
+    }
+
+
+    // Logout function
+
+    function logout() {
+
+        localStorage.removeItem("loggedIn");
+
+        window.location.href = "index.html";
+
+    }
+
+</script>
+
+</body>
+
+</html>
