@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -10,90 +11,118 @@
     <title>Player Login - Inter Miami Boys</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
+
 
 <body>
 
-    <main class="container">
+    <main class="auth-page">
 
-        <!-- Team Logo -->
-        <div class="team-logo">
-            IMB
-        </div>
+        <section class="auth-container">
 
-        <h1>Inter Miami Boys</h1>
+            <h1>Inter Miami Boys</h1>
 
-        <p class="welcome">
-            Player Portal
-        </p>
-
-        <!-- Login Card -->
-        <div class="auth-card">
-
-            <h2>Player Login</h2>
-
-            <p class="subtitle">
-                Enter your email and password
+            <p class="auth-subtitle">
+                Player Login
             </p>
 
-            <form id="loginForm">
 
-                <!-- Email -->
-                <input
-                    type="email"
-                    id="loginEmail"
-                    placeholder="Email Address"
-                    required
-                >
+            <div class="auth-card">
 
-                <!-- Password -->
-                <input
-                    type="password"
-                    id="loginPassword"
-                    placeholder="Password"
-                    required
-                >
+                <h2>Log In</h2>
 
-                <!-- Forgot Password -->
-                <div class="forgot-container">
-                    <a href="#" id="forgotPassword">
-                        Forgot Password?
+
+                <!-- ERROR MESSAGE -->
+                <p id="errorMessage"
+                   style="color: #ff6b6b;">
+                </p>
+
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm">
+
+
+                    <!-- PLAYER CODE -->
+                    <div class="form-group">
+
+                        <label for="playerCode">
+                            Player Code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="playerCode"
+                            placeholder="Example: IMB-A7K92P"
+                            required
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="loginPassword">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- FORGOT PASSWORD -->
+                    <p>
+
+                        <a href="#"
+                           id="forgotPassword">
+
+                            Forgot Password?
+
+                        </a>
+
+                    </p>
+
+
+                    <!-- LOGIN BUTTON -->
+                    <button type="submit">
+
+                        Log In
+
+                    </button>
+
+
+                </form>
+
+
+                <!-- REGISTER -->
+                <p>
+
+                    Don't have an account?
+
+                    <a href="register.html">
+                        Sign Up
                     </a>
-                </div>
 
-                <!-- Login Button -->
-                <button
-                    type="submit"
-                    class="btn login-btn">
-                    🔐 Log In
-                </button>
+                </p>
 
-            </form>
+            </div>
 
-            <!-- Error / Success Message -->
-            <p id="errorMessage" class="error-message"></p>
-
-            <!-- Sign Up -->
-            <p class="already">
-
-                Don't have an account?
-
-                <a href="register.html">
-                    Sign Up
-                </a>
-
-            </p>
-
-        </div>
-
-        <p class="footer">
-            © 2026 Inter Miami Boys
-        </p>
+        </section>
 
     </main>
 
-    <!-- Firebase Login -->
-    <script type="module" src="login.js"></script>
+
+    <script type="module"
+            src="login.js">
+    </script>
 
 </body>
 
