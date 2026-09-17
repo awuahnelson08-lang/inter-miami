@@ -1,0 +1,753 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top,
+            #3a2532,
+            #111116 55%,
+            #07070a
+        );
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+
+    text-align: center;
+}
+
+/* Team Logo */
+
+.team-logo {
+    width: 105px;
+    height: 105px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f5b5d2;
+
+    color: #111116;
+
+    border: 5px solid white;
+
+    font-size: 28px;
+    font-weight: 900;
+
+    box-shadow: 0 0 35px rgba(245, 181, 210, 0.3);
+}
+
+/* Team Name */
+
+h1 {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+
+.welcome {
+    color: #aaa;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+/* Card */
+
+.auth-card {
+    background: rgba(25, 25, 32, 0.95);
+
+    border: 1px solid #35353d;
+
+    border-radius: 20px;
+
+    padding: 30px 25px;
+
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.auth-card h2 {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #999;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    margin-bottom: 25px;
+}
+
+/* Buttons */
+
+.btn {
+    display: block;
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 14px;
+
+    border-radius: 30px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+.login-btn {
+    background: #f5b5d2;
+
+    color: #111116;
+}
+
+.signup-btn {
+    background: transparent;
+
+    color: #f5b5d2;
+
+    border: 2px solid #f5b5d2;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+
+    opacity: 0.9;
+}
+
+.signup-btn:hover {
+    background: #f5b5d2;
+
+    color: #111116;
+}
+
+/* Footer */
+
+.footer {
+    margin-top: 25px;
+
+    color: #666;
+
+    font-size: 12px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 480px) {
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .team-logo {
+        width: 90px;
+        height: 90px;
+
+        font-size: 24px;
+    }
+
+    .auth-card {
+        padding: 25px 20px;
+    }
+}
+/* =========================
+   REGISTRATION FORM
+========================= */
+
+form {
+    margin-top: 20px;
+}
+
+form input,
+form select {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #3a3a43;
+
+    border-radius: 10px;
+
+    background: #0b0b0f;
+
+    color: white;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+form input:focus,
+form select:focus {
+    border-color: #f5b5d2;
+}
+
+form select {
+    appearance: auto;
+}
+
+form button {
+    border: none;
+    cursor: pointer;
+}
+
+
+/* Generated Code */
+
+.code-box {
+    display: none;
+
+    margin-top: 20px;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background: #0b0b0f;
+
+    border: 1px solid #f5b5d2;
+}
+
+.code-box p:first-child {
+    color: #aaa;
+
+    font-size: 13px;
+
+    margin-bottom: 8px;
+}
+
+.code-box strong {
+    display: block;
+
+    font-size: 28px;
+
+    letter-spacing: 3px;
+
+    color: #f5b5d2;
+
+    margin-bottom: 15px;
+}
+
+.copy-btn {
+    border: none;
+
+    background: #f5b5d2;
+
+    color: #111116;
+
+    padding: 10px 18px;
+
+    border-radius: 20px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.warning {
+    margin-top: 15px;
+
+    color: #999;
+
+    font-size: 12px;
+}
+
+
+/* Already have account */
+
+.already {
+    margin-top: 20px;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+.already a {
+    color: #f5b5d2;
+
+    font-weight: bold;
+}
+/* =========================
+   LOGIN PAGE
+========================= */
+
+.error-message {
+    color: #ff6b6b;
+
+    font-size: 13px;
+
+    margin-top: 15px;
+
+    min-height: 20px;
+}
+
+#loginForm input {
+    display: block;
+}
+/* =========================
+   PLAYER DASHBOARD
+========================= */
+
+.dashboard-header {
+    min-height: 75px;
+
+    padding: 12px 6%;
+
+    background: #111116;
+
+    border-bottom: 1px solid #29292f;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+}
+
+.dashboard-logo {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #f5b5d2;
+
+    color: #111116;
+
+    border: 3px solid white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 900;
+}
+
+.dashboard-header h2 {
+    font-size: 18px;
+}
+
+.dashboard-header p {
+    color: #888;
+    font-size: 12px;
+}
+
+.logout-btn {
+    margin-left: auto;
+
+    padding: 10px 18px;
+
+    border: 1px solid #f5b5d2;
+
+    background: transparent;
+
+    color: #f5b5d2;
+
+    border-radius: 25px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background: #f5b5d2;
+    color: #111116;
+}
+
+
+/* Dashboard Container */
+
+.dashboard-container {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 40px 6%;
+}
+
+
+/* Welcome */
+
+.welcome-card {
+    padding: 35px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #33232d,
+            #17131a
+        );
+
+    border: 1px solid #3b3037;
+
+    margin-bottom: 25px;
+}
+
+.welcome-card h1 {
+    margin: 8px 0;
+
+    font-size: 34px;
+}
+
+.welcome-card p:not(.section-label) {
+    color: #aaa;
+}
+
+
+/* Profile */
+
+.profile-card {
+    background: #15151b;
+
+    border: 1px solid #29292f;
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    margin-bottom: 60px;
+}
+
+.profile-icon {
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    background: #f5b5d2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 40px;
+}
+
+.profile-info h2 {
+    margin-bottom: 8px;
+}
+
+.profile-info p {
+    color: #aaa;
+
+    font-size: 14px;
+
+    margin: 4px 0;
+}
+
+.profile-info strong {
+    color: white;
+}
+
+
+/* Dashboard Sections */
+
+.dashboard-section {
+    margin-bottom: 60px;
+}
+
+.dashboard-section > h2 {
+    margin: 7px 0 25px;
+
+    font-size: 30px;
+}
+
+
+/* Statistics */
+
+.stat-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+.dashboard-stat {
+    background: #15151b;
+
+    border: 1px solid #29292f;
+
+    border-radius: 15px;
+
+    padding: 25px 15px;
+
+    text-align: center;
+}
+
+.dashboard-stat span {
+    font-size: 25px;
+}
+
+.dashboard-stat h3 {
+    font-size: 28px;
+
+    color: #f5b5d2;
+
+    margin: 5px 0;
+}
+
+.dashboard-stat p {
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+/* Next Match */
+
+.next-match {
+    background: #15151b;
+
+    border: 1px solid #29292f;
+
+    border-radius: 20px;
+
+    padding: 30px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-around;
+
+    text-align: center;
+
+    gap: 20px;
+}
+
+.match-team {
+    width: 180px;
+}
+
+.match-logo,
+.opponent {
+    width: 65px;
+    height: 65px;
+
+    margin: auto auto 10px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-weight: 900;
+}
+
+.match-logo {
+    background: #f5b5d2;
+
+    color: #111116;
+
+    border: 3px solid white;
+}
+
+.opponent {
+    background: #29292f;
+
+    color: #999;
+
+    border: 2px solid #555;
+}
+
+.vs small {
+    display: block;
+
+    color: #f5b5d2;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+}
+
+.vs strong {
+    display: block;
+
+    font-size: 25px;
+
+    margin: 5px;
+}
+
+.vs p {
+    color: #888;
+
+    font-size: 12px;
+}
+
+
+/* Announcement */
+
+.announcement {
+    background: #15151b;
+
+    border: 1px solid #29292f;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    display: flex;
+
+    gap: 15px;
+
+    align-items: flex-start;
+}
+
+.announcement-icon {
+    font-size: 25px;
+}
+
+.announcement h3 {
+    margin-bottom: 5px;
+}
+
+.announcement p {
+    color: #999;
+
+    font-size: 14px;
+}
+
+
+/* Footer */
+
+.dashboard-footer {
+    text-align: center;
+
+    padding: 40px 20px;
+
+    border-top: 1px solid #29292f;
+
+    background: #07070a;
+}
+
+.dashboard-footer p {
+    color: #666;
+
+    font-size: 12px;
+
+    margin: 5px;
+}
+
+
+/* =========================
+   DASHBOARD MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .dashboard-container {
+        padding: 25px 5%;
+    }
+
+    .welcome-card {
+        padding: 25px 20px;
+    }
+
+    .welcome-card h1 {
+        font-size: 28px;
+    }
+
+    .profile-card {
+        padding: 20px;
+
+        align-items: flex-start;
+    }
+
+    .profile-icon {
+        width: 65px;
+        height: 65px;
+
+        font-size: 28px;
+
+        flex-shrink: 0;
+    }
+
+    .stat-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .next-match {
+        flex-direction: column;
+    }
+
+    .match-team {
+        width: auto;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .dashboard-header {
+        padding: 10px 4%;
+    }
+
+    .dashboard-header h2 {
+        font-size: 15px;
+    }
+
+    .logout-btn {
+        padding: 8px 12px;
+
+        font-size: 12px;
+    }
+
+    .profile-card {
+        gap: 15px;
+    }
+
+    .profile-info p {
+        font-size: 12px;
+    }
+}
