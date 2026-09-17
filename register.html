@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up - Inter Miami Boys</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="team-logo">
+            IMB
+        </div>
+
+        <h1>Join Inter Miami Boys</h1>
+
+        <p class="welcome">
+            Create your player account
+        </p>
+
+        <div class="auth-card">
+
+            <h2>Player Sign Up</h2>
+
+            <p id="errorMessage" class="error-message"></p>
+
+            <form id="registerForm">
+
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Full Name"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Username"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="jerseyNumber"
+                    placeholder="Jersey Number"
+                    min="1"
+                    max="99"
+                    required
+                >
+
+                <select id="position" required>
+                    <option value="">Select Position</option>
+                    <option value="Goalkeeper">Goalkeeper</option>
+                    <option value="Defender">Defender</option>
+                    <option value="Midfielder">Midfielder</option>
+                    <option value="Forward">Forward</option>
+                </select>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Email Address"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Create Password"
+                    minlength="6"
+                    required
+                >
+
+                <button type="submit" class="btn login-btn">
+                    Create Account
+                </button>
+
+            </form>
+
+            <div id="codeBox" class="code-box" style="display:none;">
+
+                <p>Your Player Code</p>
+
+                <strong id="playerCode"></strong>
+
+                <button type="button" id="copyButton" class="copy-btn">
+                    Copy Code
+                </button>
+
+                <p class="warning">
+                    ⚠️ Save this code. You will use it as your player ID.
+                </p>
+
+                <a href="index.html">
+                    Go to Login
+                </a>
+
+            </div>
+
+            <p class="already">
+                Already have an account?
+                <a href="index.html">Log In</a>
+            </p>
+
+        </div>
+
+        <p class="footer">
+            © 2026 Inter Miami Boys
+        </p>
+
+    </main>
+
+    <script type="module" src="register.js"></script>
+
+</body>
+</html>
