@@ -3,12 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Player Dashboard - Inter Miami Boys</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -36,7 +32,6 @@
     <!-- Main Dashboard -->
     <main class="dashboard-container">
 
-
         <!-- Welcome -->
         <section class="welcome-card">
 
@@ -45,9 +40,7 @@
             </p>
 
             <h1>
-                Welcome,
-                <span id="playerName">Player</span>
-                👋
+                Welcome, <span id="playerName">Player</span> 👋
             </h1>
 
             <p>
@@ -134,163 +127,4 @@
         <!-- Upcoming Match -->
         <section class="dashboard-section">
 
-            <p class="section-label">
-                TEAM
-            </p>
-
-            <h2>Next Match</h2>
-
-            <div class="next-match">
-
-                <div class="match-team">
-
-                    <div class="match-logo">
-                        IMB
-                    </div>
-
-                    <h3>Inter Miami Boys</h3>
-
-                </div>
-
-
-                <div class="vs">
-
-                    <small>UPCOMING</small>
-
-                    <strong>VS</strong>
-
-                    <p>
-                        Date TBA
-                    </p>
-
-                </div>
-
-
-                <div class="match-team">
-
-                    <div class="opponent">
-                        ?
-                    </div>
-
-                    <h3>Opponent</h3>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- Announcements -->
-        <section class="dashboard-section">
-
-            <p class="section-label">
-                TEAM NEWS
-            </p>
-
-            <h2>Announcements</h2>
-
-            <div class="announcement">
-
-                <div class="announcement-icon">
-                    📢
-                </div>
-
-                <div>
-
-                    <h3>
-                        Welcome to Inter Miami Boys
-                    </h3>
-
-                    <p>
-                        Your player dashboard is ready.
-                        Team announcements will appear here.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-    </main>
-
-
-    <!-- Footer -->
-    <footer class="dashboard-footer">
-
-        <p>
-            © 2026 Inter Miami Boys
-        </p>
-
-        <p>
-            One Team. One Dream. One Family.
-        </p>
-
-    </footer>
-
-
-<script>
-
-    // Get saved player
-    const savedPlayer =
-        localStorage.getItem("playerAccount");
-
-
-    // Check login
-    const loggedIn =
-        localStorage.getItem("loggedIn");
-
-
-    if (!savedPlayer || loggedIn !== "true") {
-
-        // Send user back to login
-        window.location.href = "login.html";
-
-    } else {
-
-        const player =
-            JSON.parse(savedPlayer);
-
-
-        // Display player information
-
-        document.getElementById("playerName")
-            .textContent = player.fullName;
-
-
-        document.getElementById("profileName")
-            .textContent = player.fullName;
-
-
-        document.getElementById("profileCode")
-            .textContent = player.playerCode;
-
-
-        document.getElementById("profileJersey")
-            .textContent = player.jerseyNumber;
-
-
-        document.getElementById("profilePosition")
-            .textContent = player.position;
-
-    }
-
-
-    // Logout function
-
-    function logout() {
-
-        localStorage.removeItem("loggedIn");
-
-        window.location.href = "index.html";
-
-    }
-
-</script>
-
-
-</body>
-
-</html>
+            <p
