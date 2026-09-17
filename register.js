@@ -7,7 +7,6 @@ import {
 } from "./firebase.js";
 
 
-// Get form elements
 const form = document.getElementById("registerForm");
 const errorMessage = document.getElementById("errorMessage");
 const codeBox = document.getElementById("codeBox");
@@ -35,14 +34,15 @@ function generatePlayerCode() {
 }
 
 
-// Register player
+// Registration
 form.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
     errorMessage.textContent = "";
+    errorMessage.style.color = "red";
 
-    // Get values
+
     const fullName =
         document.getElementById("fullName").value.trim();
 
@@ -72,6 +72,7 @@ form.addEventListener("submit", async function (event) {
                 password
             );
 
+
         const user = account.user;
 
 
@@ -96,7 +97,7 @@ form.addEventListener("submit", async function (event) {
         );
 
 
-        // Save Player Code for login
+        // Save Player Code mapping
         await setDoc(
             doc(db, "playerCodes", code),
             {
@@ -108,13 +109,13 @@ form.addEventListener("submit", async function (event) {
 
         // Save locally
         localStorage.setItem(
-            "playerCode",
-            code
+            "playerUid",
+            user.uid
         );
 
         localStorage.setItem(
-            "playerUid",
-            user.uid
+            "playerCode",
+            code
         );
 
         localStorage.setItem(
@@ -134,14 +135,13 @@ form.addEventListener("submit", async function (event) {
 
         // Show Player Code
         codeDisplay.textContent = code;
+
         codeBox.style.display = "block";
 
-        // Hide registration form
         form.style.display = "none";
 
-
-        // Show message
         errorMessage.style.color = "green";
+
         errorMessage.textContent =
             "Account created successfully!";
 
@@ -158,33 +158,46 @@ form.addEventListener("submit", async function (event) {
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Registration error:",
+            error
+        );
 
-        errorMessage.style.color = "red";
 
-
-        if (error.code === "auth/email-already-in-use") {
+        if (
+            error.code ===
+            "auth/email-already-in-use"
+        ) {
 
             errorMessage.textContent =
                 "This email is already registered. Please use another email or log in.";
 
         }
 
-        else if (error.code === "auth/weak-password") {
+        else if (
+            error.code ===
+            "auth/weak-password"
+        ) {
 
             errorMessage.textContent =
                 "Password must be at least 6 characters.";
 
         }
 
-        else if (error.code === "auth/invalid-email") {
+        else if (
+            error.code ===
+            "auth/invalid-email"
+        ) {
 
             errorMessage.textContent =
                 "Please enter a valid email address.";
 
         }
 
-        else if (error.code === "permission-denied") {
+        else if (
+            error.code ===
+            "permission-denied"
+        ) {
 
             errorMessage.textContent =
                 "Firebase permission denied. Check your Firestore rules.";
@@ -194,29 +207,41 @@ form.addEventListener("submit", async function (event) {
         else {
 
             errorMessage.textContent =
-                "Registration failed: " + error.message;
+                "Registration failed: " +
+                error.message;
         }
-
     }
 
 });
 
 
 // Copy Player Code
-copyButton.addEventListener("click", function () {
+copyButton.addEventListener(
+    "click",
+    function () {
 
-    const code = codeDisplay.textContent;
+        const code =
+            codeDisplay.textContent;
 
-    navigator.clipboard.writeText(code)
-        .then(function () {
 
-            alert("Player Code copied!");
+        navigator.clipboard
+            .writeText(code)
 
-        })
-        .catch(function () {
+            .then(function () {
 
-            alert("Could not copy the code.");
+                alert(
+                    "Player Code copied!"
+                );
 
-        });
+            })
 
-});
+            .catch(function () {
+
+                alert(
+                    "Could not copy the code."
+                );
+
+            });
+
+    }
+);
