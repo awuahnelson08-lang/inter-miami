@@ -2,18 +2,13 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Player Login - Inter Miami Boys</title>
 
-    <link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
-
 
 <body>
 
@@ -21,29 +16,24 @@
 
         <section class="auth-container">
 
+            <div class="team-logo">
+                IMB
+            </div>
+
             <h1>Inter Miami Boys</h1>
 
             <p class="auth-subtitle">
                 Player Login
             </p>
 
-
             <div class="auth-card">
 
                 <h2>Log In</h2>
 
+                <p id="errorMessage" class="error-message"></p>
 
-                <!-- ERROR MESSAGE -->
-                <p id="errorMessage"
-                   style="color: #ff6b6b;">
-                </p>
-
-
-                <!-- LOGIN FORM -->
                 <form id="loginForm">
 
-
-                    <!-- PLAYER CODE -->
                     <div class="form-group">
 
                         <label for="playerCode">
@@ -61,7 +51,6 @@
                     </div>
 
 
-                    <!-- PASSWORD -->
                     <div class="form-group">
 
                         <label for="loginPassword">
@@ -78,32 +67,23 @@
                     </div>
 
 
-                    <!-- FORGOT PASSWORD -->
-                    <p>
-
-                        <a href="#"
-                           id="forgotPassword">
-
+                    <p class="already">
+                        <a href="#" id="forgotPassword">
                             Forgot Password?
-
                         </a>
-
                     </p>
 
 
-                    <!-- LOGIN BUTTON -->
-                    <button type="submit">
-
-                        Log In
-
+                    <button
+                        type="submit"
+                        class="btn login-btn">
+                        🔐 Log In
                     </button>
-
 
                 </form>
 
 
-                <!-- REGISTER -->
-                <p>
+                <p class="already">
 
                     Don't have an account?
 
@@ -120,9 +100,7 @@
     </main>
 
 
-    <script type="module"
-            src="login.js">
-    </script>
+    <script type="module" src="login.js"></script>
 
 </body>
 

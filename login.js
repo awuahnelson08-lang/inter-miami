@@ -8,41 +8,26 @@ import {
 } from "./firebase.js";
 
 
-// ===============================
-// ELEMENTS
-// ===============================
-const loginForm =
-    document.getElementById("loginForm");
-
-const playerCodeInput =
-    document.getElementById("playerCode");
-
-const passwordInput =
-    document.getElementById("loginPassword");
-
-const errorMessage =
-    document.getElementById("errorMessage");
+const loginForm = document.getElementById("loginForm");
+const playerCodeInput = document.getElementById("playerCode");
+const passwordInput = document.getElementById("loginPassword");
+const errorMessage = document.getElementById("errorMessage");
 
 
-// ===============================
-// LOGIN
-// ===============================
-loginForm.addEventListener("submit", async (e) => {
+// PLAYER LOGIN
+loginForm.addEventListener("submit", async function (event) {
 
-    e.preventDefault();
+    event.preventDefault();
+
+    errorMessage.textContent = "";
+    errorMessage.style.color = "#ff6b6b";
 
 
     const playerCode =
-        playerCodeInput.value
-            .trim()
-            .toUpperCase();
+        playerCodeInput.value.trim().toUpperCase();
 
     const password =
         passwordInput.value;
-
-
-    // Clear error
-    errorMessage.textContent = "";
 
 
     if (!playerCode || !password) {
@@ -56,9 +41,7 @@ loginForm.addEventListener("submit", async (e) => {
 
     try {
 
-        // ===============================
-        // FIND PLAYER CODE
-        // ===============================
+        // Find Player Code
         const codeRef =
             doc(db, "playerCodes", playerCode);
 
@@ -75,7 +58,6 @@ loginForm.addEventListener("submit", async (e) => {
         }
 
 
-        // Get player's email
         const playerData =
             codeSnap.data();
 
@@ -83,9 +65,7 @@ loginForm.addEventListener("submit", async (e) => {
             playerData.email;
 
 
-        // ===============================
-        // FIREBASE LOGIN
-        // ===============================
+        // Login with Firebase
         const userCredential =
             await signInWithEmailAndPassword(
                 auth,
@@ -93,13 +73,12 @@ loginForm.addEventListener("submit", async (e) => {
                 password
             );
 
+
         const user =
             userCredential.user;
 
 
-        // ===============================
-        // GET PLAYER PROFILE
-        // ===============================
+        // Get player profile
         const playerRef =
             doc(db, "players", user.uid);
 
@@ -120,9 +99,7 @@ loginForm.addEventListener("submit", async (e) => {
             playerSnap.data();
 
 
-        // ===============================
-        // SAVE LOGIN DATA
-        // ===============================
+        // Save player information
         localStorage.setItem(
             "playerUid",
             user.uid
@@ -139,9 +116,7 @@ loginForm.addEventListener("submit", async (e) => {
         );
 
 
-        // ===============================
-        // OPEN DASHBOARD
-        // ===============================
+        // Open dashboard
         window.location.replace(
             "dashboard.html"
         );
@@ -149,7 +124,10 @@ loginForm.addEventListener("submit", async (e) => {
 
     } catch (error) {
 
-        console.error("Login error:", error);
+        console.error(
+            "Login error:",
+            error
+        );
 
 
         if (
@@ -160,7 +138,9 @@ loginForm.addEventListener("submit", async (e) => {
             errorMessage.textContent =
                 "Incorrect Player Code or password.";
 
-        } else if (
+        }
+
+        else if (
             error.code ===
             "auth/wrong-password"
         ) {
@@ -168,7 +148,9 @@ loginForm.addEventListener("submit", async (e) => {
             errorMessage.textContent =
                 "Incorrect password.";
 
-        } else if (
+        }
+
+        else if (
             error.code ===
             "auth/too-many-requests"
         ) {
@@ -176,7 +158,9 @@ loginForm.addEventListener("submit", async (e) => {
             errorMessage.textContent =
                 "Too many attempts. Please wait and try again.";
 
-        } else if (
+        }
+
+        else if (
             error.code ===
             "permission-denied"
         ) {
@@ -184,90 +168,87 @@ loginForm.addEventListener("submit", async (e) => {
             errorMessage.textContent =
                 "Firebase permission denied. Check your Firestore rules.";
 
-        } else {
+        }
+
+        else {
+
+            errorMessage.textContent =
+                error.message;
+
+        }
+    }
+
+});
+
+
+// FORGOT PASSWORD
+const forgotPassword =
+    document.getElementById("forgotPassword");
+
+
+forgotPassword.addEventListener(
+    "click",
+    async function (event) {
+
+        event.preventDefault();
+
+
+        const playerCode =
+            playerCodeInput.value.trim().toUpperCase();
+
+
+        if (!playerCode) {
+
+            errorMessage.textContent =
+                "Enter your Player Code first.";
+
+            return;
+        }
+
+
+        try {
+
+            const codeRef =
+                doc(db, "playerCodes", playerCode);
+
+            const codeSnap =
+                await getDoc(codeRef);
+
+
+            if (!codeSnap.exists()) {
+
+                errorMessage.textContent =
+                    "Player Code not found.";
+
+                return;
+            }
+
+
+            const playerData =
+                codeSnap.data();
+
+
+            await sendPasswordResetEmail(
+                auth,
+                playerData.email
+            );
+
+
+            alert(
+                "Password reset instructions have been sent to the email address used when you registered."
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Password reset error:",
+                error
+            );
 
             errorMessage.textContent =
                 error.message;
         }
 
     }
-
-});
-
-
-// ===============================
-// FORGOT PASSWORD
-// ===============================
-const forgotPassword =
-    document.getElementById("forgotPassword");
-
-
-forgotPassword.addEventListener("click", async (e) => {
-
-    e.preventDefault();
-
-
-    const playerCode =
-        playerCodeInput.value
-            .trim()
-            .toUpperCase();
-
-
-    if (!playerCode) {
-
-        errorMessage.textContent =
-            "Enter your Player Code first.";
-
-        return;
-    }
-
-
-    try {
-
-        // Find player code
-        const codeRef =
-            doc(db, "playerCodes", playerCode);
-
-        const codeSnap =
-            await getDoc(codeRef);
-
-
-        if (!codeSnap.exists()) {
-
-            errorMessage.textContent =
-                "Player Code not found.";
-
-            return;
-        }
-
-
-        const playerData =
-            codeSnap.data();
-
-
-        // Send password reset email
-        await sendPasswordResetEmail(
-            auth,
-            playerData.email
-        );
-
-
-        alert(
-            "Password reset instructions have been sent to the email address used when you registered."
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Password reset error:",
-            error
-        );
-
-
-        errorMessage.textContent =
-            error.message;
-
-    }
-
-});
+);
