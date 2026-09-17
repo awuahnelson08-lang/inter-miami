@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>All Players - Inter Miami Boys</title>
+
+    <link rel="stylesheet" href="style.css?v=8">
+
+    <style>
+        .players-page {
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .players-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .players-card {
+            background: #111116;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid #555;
+            background: #08080c;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .player-item {
+            background: #1b1b21;
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .player-item h3 {
+            margin-top: 0;
+        }
+
+        .player-info {
+            margin: 7px 0;
+        }
+
+        .player-code {
+            color: #f5b5d2;
+            font-weight: bold;
+        }
+
+        .back-button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 30px;
+            border: 2px solid #f5b5d2;
+            color: #f5b5d2;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        #statusMessage {
+            text-align: center;
+            margin: 15px 0;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <main class="players-page">
+
+        <header class="players-header">
+
+            <div class="team-logo">
+                IMB
+            </div>
+
+            <h1>Inter Miami Boys</h1>
+
+            <p>All Registered Players</p>
+
+        </header>
+
+
+        <section class="players-card">
+
+            <input
+                type="search"
+                id="searchInput"
+                class="search-box"
+                placeholder="🔎 Search player..."
+                autocomplete="off"
+            >
+
+            <p id="statusMessage">
+                Checking admin access...
+            </p>
+
+            <div id="playersList"></div>
+
+            <a
+                href="admin-dashboard.html"
+                class="back-button">
+                ← Back to Admin Dashboard
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <script type="module">
+
+        import {
+            auth,
+            db,
+            onAuthStateChanged,
+            doc,
+            getDoc
+        } from "./firebase.js";
+
+        import {
+            collection,
+            getDocs
+        } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+        const statusMessage =
+            document.getElementById("statusMessage");
+
+        const playersList =
+            document.getElementById("playersList");
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+
+        let allPlayers = [];
+
+
+        // Wait for Firebase to restore the login
+        onAuthStateChanged(auth, async function(user) {
+
+            if (!user) {
+
+                statusMessage.textContent =
+                    "You are not logged in. Returning to Admin Login...";
+
+                setTimeout(function() {
+                    window.location.href =
+                        "admin-login.html";
+                }, 1500);
+
+                return;
+            }
+
+
+            try {
+
+                // Check admin document
+                const adminRef =
+                    doc(
+                        db,
+                        "admins",
+                        user.uid
+                    );
+
+
+                const adminSnap =
+                    await getDoc(adminRef);
+
+
+                if (!adminSnap.exists()) {
+
+                    statusMessage.textContent =
+                        "Admin account not found.";
+
+                    return;
+                }
+
+
+                const adminData =
+                    adminSnap.data();
+
+
+                if (adminData.role !== "admin") {
+
+                    statusMessage.textContent =
+                        "This account does not have admin access.";
+
+                    return;
+                }
+
+
+                // Admin confirmed
+                statusMessage.textContent =
+                    "Admin verified. Loading players...";
+
+
+                await loadPlayers();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Admin verification error:",
+                    error
+                );
+
+                statusMessage.textContent =
+                    "Error: " + error.message;
+
+            }
+
+        });
+
+
+        // Load players
+        async function loadPlayers() {
+
+            try {
+
+                const playersRef =
+                    collection(
+                        db,
+                        "players"
+                    );
+
+
+                const snapshot =
+                    await getDocs(playersRef);
+
+
+                allPlayers = [];
+
+
+                snapshot.forEach(function(playerDoc) {
+
+                    allPlayers.push({
+                        id: playerDoc.id,
+                        ...playerDoc.data()
+                    });
+
+                });
+
+
+                statusMessage.textContent =
+                    allPlayers.length +
+                    " player(s) registered";
+
+
+                displayPlayers(allPlayers);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Loading players error:",
+                    error
+                );
+
+                statusMessage.textContent =
+                    "Could not load players: " +
+                    error.message;
+
+            }
+
+        }
+
+
+        // Display players
+        function displayPlayers(players) {
+
+            playersList.innerHTML = "";
+
+
+            if (players.length === 0) {
+
+                playersList.innerHTML =
+                    "<p>No registered players found.</p>";
+
+                return;
+            }
+
+
+            players.forEach(function(player) {
+
+                const item =
+                    document.createElement("div");
+
+                item.className =
+                    "player-item";
+
+
+                const name =
+                    player.fullName || "Unknown Player";
+
+                const username =
+                    player.username || "---";
+
+                const jersey =
+                    player.jerseyNumber || "---";
+
+                const position =
+                    player.position || "---";
+
+                const email =
+                    player.email || "---";
+
+                const code =
+                    player.playerCode || "---";
+
+
+                item.innerHTML = `
+
+                    <h3>👤 ${escapeHtml(name)}</h3>
+
+                    <p class="player-info">
+                        <strong>Username:</strong>
+                        ${escapeHtml(username)}
+                    </p>
+
+                    <p class="player-info">
+                        <strong>Jersey Number:</strong>
+                        ${escapeHtml(jersey)}
+                    </p>
+
+                    <p class="player-info">
+                        <strong>Position:</strong>
+                        ${escapeHtml(position)}
+                    </p>
+
+                    <p class="player-info">
+                        <strong>Email:</strong>
+                        ${escapeHtml(email)}
+                    </p>
+
+                    <p class="player-info player-code">
+                        Player Code:
+                        ${escapeHtml(code)}
+                    </p>
+
+                `;
+
+
+                playersList.appendChild(item);
+
+            });
+
+        }
+
+
+        // Search
+        searchInput.addEventListener(
+            "input",
+            function() {
+
+                const search =
+                    searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+
+                if (!search) {
+
+                    displayPlayers(allPlayers);
+
+                    return;
+                }
+
+
+                const filtered =
+                    allPlayers.filter(function(player) {
+
+                        return (
+
+                            (player.fullName || "")
+                            .toLowerCase()
+                            .includes(search)
+
+                            ||
+
+                            (player.username || "")
+                            .toLowerCase()
+                            .includes(search)
+
+                            ||
+
+                            (player.playerCode || "")
+                            .toLowerCase()
+                            .includes(search)
+
+                            ||
+
+                            (player.position || "")
+                            .toLowerCase()
+                            .includes(search)
+
+                        );
+
+                    });
+
+
+                displayPlayers(filtered);
+
+            }
+        );
+
+
+        // Protect displayed text
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+    </script>
+
+</body>
+
+</html>
+                
