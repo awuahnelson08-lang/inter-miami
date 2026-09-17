@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Send Information - Inter Miami Boys</title>
+
+<link rel="stylesheet" href="style.css?v=10">
+
+<style>
+.messages-page {
+    width: 100%;
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.messages-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.messages-card {
+    background: #111116;
+    padding: 25px;
+    border-radius: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #555;
+    background: #222229;
+    color: white;
+    font-size: 15px;
+}
+
+.form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+.send-button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 30px;
+    background: #f5b5d2;
+    color: #111116;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.back-button {
+    display: block;
+    margin-top: 20px;
+    padding: 14px;
+    text-align: center;
+    border: 2px solid #f5b5d2;
+    border-radius: 30px;
+    color: #f5b5d2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#messageStatus {
+    text-align: center;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<main class="messages-page">
+
+<header class="messages-header">
+
+<div class="team-logo">IMB</div>
+
+<h1>Inter Miami Boys</h1>
+
+<p>Send Information to Player</p>
+
+</header>
+
+
+<section class="messages-card">
+
+<h2>📢 Send Information</h2>
+
+<form id="messageForm">
+
+<div class="form-group">
+
+<label for="playerCode">
+Player Code
+</label>
+
+<input
+type="text"
+id="playerCode"
+placeholder="Enter player's code"
+required
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="messageTitle">
+Title
+</label>
+
+<input
+type="text"
+id="messageTitle"
+placeholder="Enter message title"
+required
+>
+
+</div>
+
+
+<div class="form-group">
+
+<label for="messageText">
+Message
+</label>
+
+<textarea
+id="messageText"
+placeholder="Write your message..."
+required
+></textarea>
+
+</div>
+
+
+<button
+type="submit"
+class="send-button"
+>
+📤 Send Information
+</button>
+
+</form>
+
+
+<p id="messageStatus"></p>
+
+
+<a
+href="admin-dashboard.html"
+class="back-button"
+>
+← Back to Admin Dashboard
+</a>
+
+</section>
+
+</main>
+
+
+<script type="module">
+
+import {
+    auth,
+    db,
+    onAuthStateChanged,
+    doc,
+    getDoc,
+    setDoc
+} from "./firebase.js";
+
+import {
+    collection,
+    query,
+    where,
+    getDocs,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+
+const form =
+    document.getElementById("messageForm");
+
+const playerCode =
+    document.getElementById("playerCode");
+
+const messageTitle =
+    document.getElementById("messageTitle");
+
+const messageText =
+    document.getElementById("messageText");
+
+const messageStatus =
+    document.getElementById("messageStatus");
+
+
+let adminUser = null;
+
+
+/* CHECK ADMIN */
+
+onAuthStateChanged(auth, async function(user) {
+
+    if (!user) {
+
+        window.location.href =
+            "admin-login.html";
+
+        return;
+    }
+
+    try {
+
+        const adminRef =
+            doc(db, "admins", user.uid);
+
+        const adminSnap =
+            await getDoc(adminRef);
+
+
+        if (!adminSnap.exists()) {
+
+            await auth.signOut();
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+        }
+
+
+        const adminData =
+            adminSnap.data();
+
+
+        if (adminData.role !== "admin") {
+
+            await auth.signOut();
+
+            window.location.href =
+                "admin-login.html";
+
+            return;
+        }
+
+
+        adminUser = user;
+
+        messageStatus.textContent =
+            "Admin access verified ✓";
+
+        messageStatus.style.color =
+            "green";
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        messageStatus.textContent =
+            "Error checking admin access.";
+
+        messageStatus.style.color =
+            "red";
+    }
+
+});
+
+
+/* SEND MESSAGE */
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        if (!adminUser) {
+
+            messageStatus.textContent =
+                "Admin access is not ready.";
+
+            messageStatus.style.color =
+                "red";
+
+            return;
+        }
+
+
+        const code =
+            playerCode.value.trim().toUpperCase();
+
+        const title =
+            messageTitle.value.trim();
+
+        const text =
+            messageText.value.trim();
+
+
+        if (!code || !title || !text) {
+
+            messageStatus.textContent =
+                "Please fill in all fields.";
+
+            messageStatus.style.color =
+                "red";
+
+            return;
+        }
+
+
+        messageStatus.textContent =
+            "Finding player...";
+
+        messageStatus.style.color =
+            "#f5b5d2";
+
+
+        try {
+
+            /* FIND PLAYER BY CODE */
+
+            const playersQuery = query(
+                collection(db, "players"),
+                where("playerCode", "==", code)
+            );
+
+
+            const playerSnapshot =
+                await getDocs(playersQuery);
+
+
+            if (playerSnapshot.empty) {
+
+                messageStatus.textContent =
+                    "Player code not found.";
+
+                messageStatus.style.color =
+                    "red";
+
+                return;
+            }
+
+
+            const playerDoc =
+                playerSnapshot.docs[0];
+
+            const playerUid =
+                playerDoc.id;
+
+
+            /* CREATE MESSAGE */
+
+            const messageRef =
+                doc(collection(db, "messages"));
+
+
+            await setDoc(messageRef, {
+
+                recipientUid: playerUid,
+
+                playerCode: code,
+
+                title: title,
+
+                message: text,
+
+                senderUid: adminUser.uid,
+
+                createdAt: serverTimestamp(),
+
+                read: false
+
+            });
+
+
+            messageStatus.textContent =
+                "✅ Information sent successfully!";
+
+            messageStatus.style.color =
+                "green";
+
+
+            form.reset();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "SEND MESSAGE ERROR:",
+                error
+            );
+
+
+            messageStatus.textContent =
+                "Error: " +
+                error.message;
+
+            messageStatus.style.color =
+                "red";
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
