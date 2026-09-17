@@ -6,38 +6,43 @@ import {
     setDoc
 } from "./firebase.js";
 
+
+// Get form elements
 const form = document.getElementById("registerForm");
 const errorMessage = document.getElementById("errorMessage");
 const codeBox = document.getElementById("codeBox");
-const playerCode = document.getElementById("playerCode");
+const codeDisplay = document.getElementById("playerCode");
 const copyButton = document.getElementById("copyButton");
 
+
+// Generate Player Code
 function generatePlayerCode() {
 
     const characters =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-    let randomCode = "";
+    let code = "IMB-";
 
     for (let i = 0; i < 6; i++) {
 
-        const randomIndex =
-            Math.floor(
-                Math.random() * characters.length
-            );
+        const randomNumber =
+            Math.floor(Math.random() * characters.length);
 
-        randomCode += characters[randomIndex];
+        code += characters[randomNumber];
     }
 
-    return "IMB-" + randomCode;
+    return code;
 }
 
-form.addEventListener("submit", async function(event) {
+
+// Register player
+form.addEventListener("submit", async function (event) {
 
     event.preventDefault();
 
     errorMessage.textContent = "";
 
+    // Get values
     const fullName =
         document.getElementById("fullName").value.trim();
 
@@ -56,22 +61,29 @@ form.addEventListener("submit", async function(event) {
     const password =
         document.getElementById("password").value;
 
+
     try {
 
-        const userCredential =
+        // Create Firebase account
+        const account =
             await createUserWithEmailAndPassword(
                 auth,
                 email,
                 password
             );
 
-        const user = userCredential.user;
+        const user = account.user;
 
+
+        // Generate Player Code
         const code = generatePlayerCode();
 
+
+        // Save player information
         await setDoc(
             doc(db, "players", user.uid),
             {
+                uid: user.uid,
                 fullName: fullName,
                 username: username,
                 jerseyNumber: jerseyNumber,
@@ -83,40 +95,128 @@ form.addEventListener("submit", async function(event) {
             }
         );
 
-        playerCode.textContent = code;
 
+        // Save Player Code for login
+        await setDoc(
+            doc(db, "playerCodes", code),
+            {
+                uid: user.uid,
+                email: email
+            }
+        );
+
+
+        // Save locally
+        localStorage.setItem(
+            "playerCode",
+            code
+        );
+
+        localStorage.setItem(
+            "playerUid",
+            user.uid
+        );
+
+        localStorage.setItem(
+            "playerAccount",
+            JSON.stringify({
+                uid: user.uid,
+                fullName: fullName,
+                username: username,
+                jerseyNumber: jerseyNumber,
+                position: position,
+                email: email,
+                playerCode: code,
+                role: "player"
+            })
+        );
+
+
+        // Show Player Code
+        codeDisplay.textContent = code;
         codeBox.style.display = "block";
 
+        // Hide registration form
         form.style.display = "none";
+
+
+        // Show message
+        errorMessage.style.color = "green";
+        errorMessage.textContent =
+            "Account created successfully!";
+
+
+        // Open dashboard after 3 seconds
+        setTimeout(function () {
+
+            window.location.replace(
+                "dashboard.html"
+            );
+
+        }, 3000);
+
 
     } catch (error) {
 
-        console.log(error);
+        console.error(error);
+
+        errorMessage.style.color = "red";
+
 
         if (error.code === "auth/email-already-in-use") {
 
             errorMessage.textContent =
-                "This email is already registered.";
+                "This email is already registered. Please use another email or log in.";
 
-        } else if (error.code === "auth/weak-password") {
+        }
+
+        else if (error.code === "auth/weak-password") {
 
             errorMessage.textContent =
                 "Password must be at least 6 characters.";
 
-        } else {
+        }
+
+        else if (error.code === "auth/invalid-email") {
 
             errorMessage.textContent =
-                "Registration failed. Please try again.";
+                "Please enter a valid email address.";
+
         }
+
+        else if (error.code === "permission-denied") {
+
+            errorMessage.textContent =
+                "Firebase permission denied. Check your Firestore rules.";
+
+        }
+
+        else {
+
+            errorMessage.textContent =
+                "Registration failed: " + error.message;
+        }
+
     }
+
 });
 
-copyButton.addEventListener("click", function() {
 
-    const code = playerCode.textContent;
+// Copy Player Code
+copyButton.addEventListener("click", function () {
 
-    navigator.clipboard.writeText(code);
+    const code = codeDisplay.textContent;
 
-    alert("Player code copied!");
+    navigator.clipboard.writeText(code)
+        .then(function () {
+
+            alert("Player Code copied!");
+
+        })
+        .catch(function () {
+
+            alert("Could not copy the code.");
+
+        });
 
 });
