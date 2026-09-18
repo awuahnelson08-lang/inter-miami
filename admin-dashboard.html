@@ -85,7 +85,7 @@
 
 <section class="admin-card">
 
-<h2>Welcome, Administrator 👋</h2>
+<h2>Welcome, Administrator 👑</h2>
 
 <p>
 You have access to the Inter Miami Boys management system.
@@ -102,25 +102,24 @@ You have access to the Inter Miami Boys management system.
 
 <!-- PLAYERS -->
 <a href="players.html" class="admin-button">
-👥 View All Players
+📋 View All Players
 </a>
 
 
 <!-- MESSAGES -->
-<a href="messages.html" class="admin-button">
-📢 Send Information
+<a href="message.html" class="admin-button">
+📨 Send Information
 </a>
 
 
 <!-- ANNOUNCEMENTS -->
 <a href="announcements.html" class="admin-button">
-📣 Announcements
+📢 Announcements
 </a>
 
 
 <!-- LOGOUT -->
-<button type="button" id="logoutButton"
-class="admin-button logout-button">
+<button type="button" id="logoutButton" class="admin-button logout-button">
 🚪 Logout
 </button>
 
@@ -145,11 +144,8 @@ import {
 } from "./firebase.js";
 
 
-const adminMessage =
-    document.getElementById("adminMessage");
-
-const logoutButton =
-    document.getElementById("logoutButton");
+const adminMessage = document.getElementById("adminMessage");
+const logoutButton = document.getElementById("logoutButton");
 
 
 /* CHECK ADMIN */
@@ -157,66 +153,35 @@ const logoutButton =
 onAuthStateChanged(auth, async function(user) {
 
     if (!user) {
-
-        window.location.href =
-            "admin-login.html";
-
+        window.location.href = "admin-login.html";
         return;
     }
 
-
     try {
-
-        const adminRef =
-            doc(db, "admins", user.uid);
-
-        const adminSnap =
-            await getDoc(adminRef);
-
+        const adminRef = doc(db, "admins", user.uid);
+        const adminSnap = await getDoc(adminRef);
 
         if (!adminSnap.exists()) {
-
             await signOut(auth);
-
-            window.location.href =
-                "admin-login.html";
-
+            window.location.href = "admin-login.html";
             return;
         }
 
-
-        const adminData =
-            adminSnap.data();
-
+        const adminData = adminSnap.data();
 
         if (adminData.role !== "admin") {
-
             await signOut(auth);
-
-            window.location.href =
-                "admin-login.html";
-
+            window.location.href = "admin-login.html";
             return;
         }
 
+        adminMessage.textContent = "Admin access verified ✓";
+        adminMessage.style.color = "green";
 
-        adminMessage.textContent =
-            "Admin access verified ✓";
-
-        adminMessage.style.color =
-            "green";
-
-    }
-
-    catch (error) {
-
+    } catch (error) {
         console.error(error);
-
-        adminMessage.textContent =
-            "Error: " + error.message;
-
-        adminMessage.style.color =
-            "red";
+        adminMessage.textContent = "Error: " + error.message;
+        adminMessage.style.color = "red";
     }
 
 });
@@ -224,33 +189,20 @@ onAuthStateChanged(auth, async function(user) {
 
 /* LOGOUT */
 
-logoutButton.addEventListener(
-    "click",
-    async function() {
+logoutButton.addEventListener("click", async function() {
+    try {
+        await signOut(auth);
 
-        try {
+        localStorage.removeItem("adminUid");
+        localStorage.removeItem("adminEmail");
+        localStorage.removeItem("adminRole");
 
-            await signOut(auth);
+        window.location.href = "admin-login.html";
 
-            localStorage.removeItem("adminUid");
-            localStorage.removeItem("adminEmail");
-            localStorage.removeItem("adminRole");
-
-            window.location.href =
-                "admin-login.html";
-
-        }
-
-        catch (error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-        }
-
+    } catch (error) {
+        console.error("Logout error:", error);
     }
-);
+});
 
 </script>
 
