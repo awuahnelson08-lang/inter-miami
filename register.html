@@ -1,215 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Player Registration - Inter Miami Boys</title>
-
+    <title>Create Account - Inter Miami Boys</title>
     <link rel="stylesheet" href="style.css?v=3">
 </head>
-
 <body>
-
     <main class="auth-page">
-
         <section class="auth-container">
-
-            <div class="team-logo">
-                IMB
-            </div>
-
+            <div class="team-logo">IMB</div>
             <h1>Inter Miami Boys</h1>
-
-            <p class="auth-subtitle">
-                Player Registration
-            </p>
+            <p class="auth-subtitle">Player Registration</p>
 
             <div class="auth-card">
-
                 <h2>Create Account</h2>
-
                 <p id="errorMessage" class="error-message"></p>
 
-
                 <form id="registerForm">
-
-
                     <div class="form-group">
-
-                        <label for="fullName">
-                            Full Name
-                        </label>
-
-                        <input
-                            type="text"
-                            id="fullName"
-                            placeholder="Enter your full name"
-                            required
-                        >
-
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="John Doe" required>
                     </div>
 
-
                     <div class="form-group">
-
-                        <label for="username">
-                            Username
-                        </label>
-
-                        <input
-                            type="text"
-                            id="username"
-                            placeholder="Choose a username"
-                            required
-                        >
-
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="johndoe10" required>
                     </div>
 
-
                     <div class="form-group">
-
-                        <label for="jerseyNumber">
-                            Jersey Number
-                        </label>
-
-                        <input
-                            type="number"
-                            id="jerseyNumber"
-                            placeholder="Example: 10"
-                            min="1"
-                            max="99"
-                            required
-                        >
-
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="john@example.com" required>
                     </div>
 
-
                     <div class="form-group">
-
-                        <label for="position">
-                            Position
-                        </label>
-
-                        <select id="position" required>
-
-                            <option value="">
-                                Select Position
-                            </option>
-
-                            <option value="Goalkeeper">
-                                Goalkeeper
-                            </option>
-
-                            <option value="Defender">
-                                Defender
-                            </option>
-
-                            <option value="Midfielder">
-                                Midfielder
-                            </option>
-
-                            <option value="Forward">
-                                Forward
-                            </option>
-
-                        </select>
-
+                        <label for="jerseyNumber">Jersey Number</label>
+                        <input type="number" id="jerseyNumber" placeholder="10" required>
                     </div>
 
-
                     <div class="form-group">
-
-                        <label for="email">
-                            Email Address
-                        </label>
-
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Enter your email"
-                            required
-                        >
-
+                        <label for="position">Position</label>
+                        <input type="text" id="position" placeholder="Forward / Midfielder" required>
                     </div>
 
-
                     <div class="form-group">
-
-                        <label for="password">
-                            Password
-                        </label>
-
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Create a password"
-                            minlength="6"
-                            required
-                        >
-
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Create a password" required>
                     </div>
 
-
-                    <button
-                        type="submit"
-                        class="btn login-btn">
-                        📝 Create Account
-                    </button>
-
+                    <button type="submit" class="btn signup-btn">📝 Sign Up</button>
                 </form>
 
-
-                <!-- Player Code -->
-                <div
-                    id="codeBox"
-                    class="code-box"
-                    style="display: none;">
-
-                    <h3>Your Player Code</h3>
-
-                    <p>
-                        Keep this code safe.
-                        You will use it to log in.
-                    </p>
-
-                    <strong
-                        id="playerCode">
-                    </strong>
-
-                    <button
-                        type="button"
-                        id="copyButton"
-                        class="copy-btn">
-                        📋 Copy Player Code
-                    </button>
-
-                </div>
-
-
                 <p class="already">
-
-                    Already have an account?
-
-                    <a href="login.html">
-                        Log In
-                    </a>
-
+                    Already have an account? <a href="login.html">Log In</a>
                 </p>
-
             </div>
-
         </section>
-
     </main>
 
-
-    <script
-        type="module"
-        src="register.js">
-    </script>
-
+    <script type="module" src="register.js"></script>
 </body>
-
 </html>

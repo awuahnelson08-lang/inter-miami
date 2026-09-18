@@ -22,7 +22,7 @@
             <p>Player Portal</p>
         </div>
 
-        <button class="logout-btn" onclick="logout()">
+        <button class="logout-btn" id="logoutBtn">
             Logout
         </button>
 
@@ -126,5 +126,41 @@
 
         <!-- Upcoming Match -->
         <section class="dashboard-section">
+            <p class="section-label">UPCOMING MATCH</p>
+            <h2>Next Fixture</h2>
+            <div class="match-card">
+                <p>No upcoming match scheduled at this time.</p>
+            </div>
+        </section>
 
-            <p
+    </main>
+
+    <script type="module">
+        import { auth, signOut, onAuthStateChanged } from "./firebase.js";
+
+        const logoutBtn = document.getElementById("logoutBtn");
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+            } else {
+                const playerData = JSON.parse(localStorage.getItem("playerAccount") || "{}");
+                if (playerData.fullName) {
+                    document.getElementById("playerName").textContent = playerData.fullName;
+                    document.getElementById("profileName").textContent = playerData.fullName;
+                    document.getElementById("profileCode").textContent = playerData.playerCode || "---";
+                    document.getElementById("profileJersey").textContent = playerData.jerseyNumber || "---";
+                    document.getElementById("profilePosition").textContent = playerData.position || "---";
+                }
+            }
+        });
+
+        logoutBtn.addEventListener("click", async () => {
+            await signOut(auth);
+            localStorage.clear();
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+
+</html>
